@@ -30,3 +30,7 @@ The repository contains:
 - Analytical insights
 - Power BI dashboard
 - Final business recommendations
+
+## Dashboard
+Power BI dashboard presenting key KPIs, revenue trends and hotel-type comparison.
+
