@@ -159,5 +159,65 @@ ORDER BY revenue_net DESC
 LIMIT 10;
 
 /* =========================================================
-   5) OPTIONAL: VIEWS FOR POWER BI
-   =================================
+   5) VIEWS FOR POWER BI
+   Purpose:
+   - Provide clean, ready-to-use analytical layers
+   - Simplify Power BI modeling
+   ========================================================= */
+
+-- Monthly KPIs (time series)
+CREATE VIEW v_monthly_kpi AS
+SELECT
+  strftime('%Y-%m', arrival_date) AS year_month,
+  COUNT(*) AS bookings,
+  ROUND(AVG(adr), 2) AS avg_adr,
+  ROUND(
+    SUM(CASE WHEN is_canceled = 1 THEN 0 ELSE adr * total_nights END),
+    2
+  ) AS revenue_net,
+  ROUND(
+    1.0 * SUM(CASE WHEN is_canceled = 1 THEN 1 ELSE 0 END) / COUNT(*),
+    4
+  ) AS cancel_rate
+FROM bookings
+GROUP BY 1
+ORDER BY 1;
+
+
+-- Market segment performance
+CREATE VIEW v_segment_performance AS
+SELECT
+  market_segment,
+  COUNT(*) AS bookings,
+  ROUND(
+    1.0 * SUM(CASE WHEN is_canceled = 1 THEN 1 ELSE 0 END) / COUNT(*),
+    4
+  ) AS cancel_rate,
+  ROUND(
+    SUM(CASE WHEN is_canceled = 1 THEN 0 ELSE adr * total_nights END),
+    2
+  ) AS revenue_net
+FROM bookings
+GROUP BY 1
+ORDER BY revenue_net DESC;
+
+
+-- Distribution channel performance
+CREATE VIEW v_channel_performance AS
+SELECT
+  distribution_channel,
+  COUNT(*) AS bookings,
+  ROUND(AVG(lead_time), 1) AS avg_lead_time,
+  ROUND(
+    1.0 * SUM(CASE WHEN is_canceled = 1 THEN 1 ELSE 0 END) / COUNT(*),
+    4
+  ) AS cancel_rate,
+  ROUND(
+    SUM(CASE WHEN is_canceled = 1 THEN 0 ELSE adr * total_nights END),
+    2
+  ) AS revenue_net
+FROM bookings
+GROUP BY 1
+ORDER BY revenue_net DESC;
+-- Add analytical views for Power BI (monthly KPI, segments, channels)
+
