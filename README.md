@@ -33,4 +33,11 @@ The repository contains:
 
 ## Dashboard
 Power BI dashboard presenting key KPIs, revenue trends and hotel-type comparison.
+## Dashboard
+An interactive Power BI dashboard was created to visualize:
+- Key business KPIs (bookings, revenue, cancellation rate)
+- Monthly revenue trends
+- Comparison between City Hotel and Resort Hotel
+
+
 
